@@ -2,6 +2,7 @@ import random
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from datetime import datetime
+import pytz  # Библиотека для работы с часовыми поясами
 
 TOKEN = '7885324267:AAHFISc1gkB7BCLXllYhFNG3bZIUeU9g4a0'
 FIXED_PRICE = '120₸'
@@ -26,8 +27,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # Обработка сообщения с номером автобуса
 async def bus_info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     bus_number = update.message.text
-    date_only = datetime.now().strftime("%d/%m")  # Только дата
-    time_only = datetime.now().strftime("%H:%M")  # Только время
+
+    # Установка часового пояса Алматы
+    almaty_tz = pytz.timezone("Asia/Almaty")
+    now = datetime.now(almaty_tz)
+
+    date_only = now.strftime("%d/%m")  # Только дата
+    time_only = now.strftime("%H:%M")  # Только время
     license_plate = generate_random_license()
     qr_link = generate_random_qr()
 
